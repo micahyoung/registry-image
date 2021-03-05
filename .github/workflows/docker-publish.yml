@@ -92,12 +92,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Enable docker cli experimental features (for manifest lists)
-        if: matrix.config == 'windows-wcow'
         shell: shell
         run: |
           set -o errexit -o pipefail -o nounset
+
           mkdir ~/.docker
-          echo '{"experimental":true}' > ~/.docker/config.json
+          echo '{"experimental":"enabled"}' > ~/.docker/config.json
 
       - name: Build amd64 images
         shell: bash

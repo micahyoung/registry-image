@@ -98,7 +98,6 @@ jobs:
         run: |
           set -o errexit -o pipefail -o nounset
 
-          mkdir ~/.docker
           echo '{"experimental":"enabled"}' > ~/.docker/config.json
 
       - name: Build amd64 images

@@ -69,7 +69,7 @@ jobs:
         run: |
           set -o errexit -o pipefail -o nounset
 
-          docker build . --file Dockerfile --build-arg arch=arm64 --tag $IMAGE_REPO
+          docker build . --file Dockerfile --build-arg arch=arm64v8 --tag $IMAGE_REPO
 
       - name: Log into registry
         if: github.event_name == 'push'

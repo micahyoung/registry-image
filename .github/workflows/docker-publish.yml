@@ -51,6 +51,7 @@ jobs:
 
       - name: Recreate manifest list
         if: github.event_name == 'push'
+        run: |
           docker manifest create $IMAGE_REPO:latest $LINUX_AMD64_IMAGE_ID $LINUX_ARM64_IMAGE_ID $WINDOWS_AMD64_IMAGE_ID
           docker manifest push $IMAGE_REPO:latest
 
@@ -84,6 +85,7 @@ jobs:
 
       - name: Recreate manifest list
         if: github.event_name == 'push'
+        run: |
           docker manifest create $IMAGE_REPO:latest $LINUX_AMD64_IMAGE_ID $LINUX_ARM64_IMAGE_ID $WINDOWS_AMD64_IMAGE_ID
           docker manifest push $IMAGE_REPO:latest
 
@@ -122,5 +124,6 @@ jobs:
       - name: Recreate manifest list
         shell: bash
         if: github.event_name == 'push'
+        run: |
           docker manifest create $IMAGE_REPO:latest $LINUX_AMD64_IMAGE_ID $LINUX_ARM64_IMAGE_ID $WINDOWS_AMD64_IMAGE_ID
           docker manifest push $IMAGE_REPO:latest

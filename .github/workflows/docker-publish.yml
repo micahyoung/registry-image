@@ -92,7 +92,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Enable docker cli experimental features (for manifest lists)
-        shell: shell
+        shell: bash
         run: |
           set -o errexit -o pipefail -o nounset
 

@@ -22,6 +22,9 @@ on:
 
 env:
   IMAGE_REPO: micahyoung/registry 
+  LINUX_ARM64_IMAGE_ID: micahyoung/registry:linux-amd64
+  LINUX_AMD64_IMAGE_ID: micahyoung/registry:linux-arm64
+  WINDOWS_AMD64_IMAGE_ID: micahyoung/registry:windows-amd64
 
 jobs:
   push-linux-amd64:
@@ -43,14 +46,12 @@ jobs:
       - name: Push amd64 image
         if: github.event_name == 'push'
         run: |
-          IMAGE_ID=$IMAGE_REPO:linux-amd64
+          docker tag $IMAGE_REPO $LINUX_AMD64_IMAGE_ID
+          docker push $LINUX_AMD64_IMAGE_ID
 
-          echo IMAGE_ID=$IMAGE_ID
-
-          docker tag $IMAGE_REPO $IMAGE_ID
-          docker push $IMAGE_ID
-
-          docker manifest create $IMAGE_REPO:latest --amend $IMAGE_ID
+      - name: Recreate manifest list
+        if: github.event_name == 'push'
+          docker manifest create $IMAGE_REPO:latest $LINUX_AMD64_IMAGE_ID $LINUX_ARM64_IMAGE_ID $WINDOWS_AMD64_IMAGE_ID
           docker manifest push $IMAGE_REPO:latest
 
   push-linux-arm64:
@@ -78,14 +79,12 @@ jobs:
       - name: Push arm64 image
         if: github.event_name == 'push'
         run: |
-          IMAGE_ID=$IMAGE_REPO:linux-arm64
+          docker tag $IMAGE_REPO $LINUX_ARM64_IMAGE_ID
+          docker push $LINUX_ARM64_IMAGE_ID
 
-          echo IMAGE_ID=$IMAGE_ID
-
-          docker tag $IMAGE_REPO $IMAGE_ID
-          docker push $IMAGE_ID
-
-          docker manifest create $IMAGE_REPO:latest --amend $IMAGE_ID
+      - name: Recreate manifest list
+        if: github.event_name == 'push'
+          docker manifest create $IMAGE_REPO:latest $LINUX_AMD64_IMAGE_ID $LINUX_ARM64_IMAGE_ID $WINDOWS_AMD64_IMAGE_ID
           docker manifest push $IMAGE_REPO:latest
 
   push-windows-amd64:
@@ -117,12 +116,11 @@ jobs:
         if: github.event_name == 'push'
         shell: bash
         run: |
-          IMAGE_ID=$IMAGE_REPO:windows-amd64
+          docker tag $IMAGE_REPO $WINDOWS_AMD64_IMAGE_ID
+          docker push $WINDOWS_AMD64_IMAGE_ID
 
-          echo IMAGE_ID=$IMAGE_ID
-
-          docker tag $IMAGE_REPO $IMAGE_ID
-          docker push $IMAGE_ID
-
-          docker manifest create $IMAGE_REPO:latest --amend $IMAGE_ID
+      - name: Recreate manifest list
+        shell: bash
+        if: github.event_name == 'push'
+          docker manifest create $IMAGE_REPO:latest $LINUX_AMD64_IMAGE_ID $LINUX_ARM64_IMAGE_ID $WINDOWS_AMD64_IMAGE_ID
           docker manifest push $IMAGE_REPO:latest

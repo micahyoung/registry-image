@@ -92,8 +92,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-        shell: bash
       - name: Build amd64 images
+        shell: bash
         run: |
           set -o errexit -o pipefail -o nounset
 
@@ -101,11 +101,13 @@ jobs:
 
       - name: Log into registry
         if: github.event_name == 'push'
+        shell: bash
         run: |
           echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: Push amd64 image
         if: github.event_name == 'push'
+        shell: bash
         run: |
           IMAGE_ID=$IMAGE_REPO:windows-amd64
 

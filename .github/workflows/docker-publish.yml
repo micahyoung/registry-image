@@ -50,7 +50,8 @@ jobs:
           docker tag $IMAGE_REPO $IMAGE_ID
           docker push $IMAGE_ID
 
-          docker manifest annotate $IMAGE_REPO:latest $IMAGE_ID
+          docker manifest create $IMAGE_REPO:latest --amend $IMAGE_ID
+          docker manifest push $IMAGE_REPO:latest
 
   push-linux-arm64:
     runs-on: ubuntu-latest
@@ -84,7 +85,8 @@ jobs:
           docker tag $IMAGE_REPO $IMAGE_ID
           docker push $IMAGE_ID
 
-          docker manifest annotate $IMAGE_REPO:latest $IMAGE_ID
+          docker manifest create $IMAGE_REPO:latest --amend $IMAGE_ID
+          docker manifest push $IMAGE_REPO:latest
 
   push-windows-amd64:
     runs-on: windows-latest
@@ -122,4 +124,5 @@ jobs:
           docker tag $IMAGE_REPO $IMAGE_ID
           docker push $IMAGE_ID
 
-          docker manifest annotate $IMAGE_REPO:latest $IMAGE_ID
+          docker manifest create $IMAGE_REPO:latest --amend $IMAGE_ID
+          docker manifest push $IMAGE_REPO:latest

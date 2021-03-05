@@ -1,0 +1,117 @@
+name: Docker
+
+on:
+  push:
+    # Publish `main` as Docker `latest` image.
+    branches:
+      - main
+   
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+    paths-ignore:
+      - README.md
+
+  # Run tests for any PRs.
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+
+env:
+  IMAGE_REPO: micahyoung/registry 
+
+jobs:
+  push-linux-amd64:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: registry:linux-amd64
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build amd64 images
+        run: |
+          set -o errexit -o pipefail -o nounset
+
+          docker build . --file Dockerfile --build-arg arch=amd64 --tag $IMAGE_REPO
+
+      - name: Log into registry
+        if: github.event_name == 'push'
+        run: |
+          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Push amd64 image
+        if: github.event_name == 'push'
+        run: |
+          IMAGE_ID=$IMAGE_REPO:linux-amd64
+
+          echo IMAGE_ID=$IMAGE_ID
+
+          docker tag $IMAGE_NAME $IMAGE_ID
+          docker push $IMAGE_ID
+
+          docker manifest annotate $IMAGE_REPO:latest $IMAGE_ID
+
+  push-linux-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Enable docker binfmt_misc for ARM image support
+        run: |
+          set -o errexit -o pipefail -o nounset
+          
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+      - name: Build arm64 images
+        run: |
+          set -o errexit -o pipefail -o nounset
+
+          docker build . --file Dockerfile --build-arg arch=arm64 --tag $IMAGE_REPO
+
+      - name: Log into registry
+        if: github.event_name == 'push'
+        run: |
+          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Push arm64 image
+        if: github.event_name == 'push'
+        run: |
+          IMAGE_ID=$IMAGE_REPO:linux-arm64
+
+          echo IMAGE_ID=$IMAGE_ID
+
+          docker tag $IMAGE_NAME $IMAGE_ID
+          docker push $IMAGE_ID
+
+          docker manifest annotate $IMAGE_REPO:latest $IMAGE_ID
+
+  push-windows-amd64:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        shell: bash
+      - name: Build amd64 images
+        run: |
+          set -o errexit -o pipefail -o nounset
+
+          docker build . --file Dockerfile.windows --build-arg arch=amd64 --tag $IMAGE_REPO
+
+      - name: Log into registry
+        if: github.event_name == 'push'
+        run: |
+          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Push amd64 image
+        if: github.event_name == 'push'
+        run: |
+          IMAGE_ID=$IMAGE_REPO:windows-amd64
+
+          echo IMAGE_ID=$IMAGE_ID
+
+          docker tag $IMAGE_NAME $IMAGE_ID
+          docker push $IMAGE_ID
+
+          docker manifest annotate $IMAGE_REPO:latest $IMAGE_ID

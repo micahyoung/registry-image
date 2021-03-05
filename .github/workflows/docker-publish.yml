@@ -26,8 +26,6 @@ env:
 jobs:
   push-linux-amd64:
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: registry:linux-amd64
     steps:
       - uses: actions/checkout@v2
 
@@ -49,7 +47,7 @@ jobs:
 
           echo IMAGE_ID=$IMAGE_ID
 
-          docker tag $IMAGE_NAME $IMAGE_ID
+          docker tag $IMAGE_REPO $IMAGE_ID
           docker push $IMAGE_ID
 
           docker manifest annotate $IMAGE_REPO:latest $IMAGE_ID
@@ -83,7 +81,7 @@ jobs:
 
           echo IMAGE_ID=$IMAGE_ID
 
-          docker tag $IMAGE_NAME $IMAGE_ID
+          docker tag $IMAGE_REPO $IMAGE_ID
           docker push $IMAGE_ID
 
           docker manifest annotate $IMAGE_REPO:latest $IMAGE_ID
@@ -113,7 +111,7 @@ jobs:
 
           echo IMAGE_ID=$IMAGE_ID
 
-          docker tag $IMAGE_NAME $IMAGE_ID
+          docker tag $IMAGE_REPO $IMAGE_ID
           docker push $IMAGE_ID
 
           docker manifest annotate $IMAGE_REPO:latest $IMAGE_ID

@@ -1,5 +1,5 @@
 ARG arch="amd64"
-FROM ${arch}/golang:1.15-alpine AS builder
+FROM ${arch}/golang:1.15 AS builder
 
 RUN go get github.com/distribution/distribution/cmd/registry
 

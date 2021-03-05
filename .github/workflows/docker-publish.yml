@@ -33,7 +33,7 @@ jobs:
         run: |
           set -o errexit -o pipefail -o nounset
 
-          docker build . --file Dockerfile --build-arg arch=amd64 --tag $IMAGE_REPO
+          docker build . --file Dockerfile --build-arg platform=linux/amd64 --tag $IMAGE_REPO
 
       - name: Log into registry
         if: github.event_name == 'push'
@@ -67,7 +67,7 @@ jobs:
         run: |
           set -o errexit -o pipefail -o nounset
 
-          docker build . --file Dockerfile --build-arg arch=arm64v8 --tag $IMAGE_REPO
+          docker build . --file Dockerfile --build-arg platform=linux/arm64 --tag $IMAGE_REPO
 
       - name: Log into registry
         if: github.event_name == 'push'
@@ -95,7 +95,7 @@ jobs:
         run: |
           set -o errexit -o pipefail -o nounset
 
-          docker build . --file Dockerfile.windows --build-arg arch=winamd64 --tag $IMAGE_REPO
+          docker build . --file Dockerfile.windows --build-arg platform=windows/amd64 --tag $IMAGE_REPO
 
       - name: Log into registry
         if: github.event_name == 'push'

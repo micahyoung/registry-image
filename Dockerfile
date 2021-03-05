@@ -1,9 +1,9 @@
-ARG arch="amd64"
-FROM ${arch}/golang:1.15 AS builder
+ARG platform="linux/amd64"
+FROM --platform=$platform golang:1.15 AS builder
 
 RUN go get github.com/distribution/distribution/cmd/registry
 
-FROM alpine
+FROM --platform=$platform alpine
 
 COPY --from=builder /go/bin/registry /registry
 COPY config.yml /config/config.yml

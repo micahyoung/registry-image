@@ -2,7 +2,7 @@
 
 Equivalent to `docker.io/library/registry:2` with the following changes:
   * Builds binaries from latest released [docker-distribution](https://github.com/distribution/distribution/releases) source using latest `docker.io/library/golang:1.15`.
-  * Builds multi-os images:
+  * Builds images for multiple OSes & architectures:
     * `linux/amd64`, `linux/arm64` (`gcr.io/distroless/base`-based)
     * `windows/amd64` (`mcr.microsoft.com/windows/nanoserver:1809`-based)
   * All images built/published from this repo via [GitHub Actions](https://github.com/micahyoung/registry-image/actions).

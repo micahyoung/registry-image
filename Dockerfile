@@ -8,5 +8,7 @@ FROM --platform=$platform gcr.io/distroless/base
 COPY --from=builder /go/bin/registry /registry
 COPY config.yml /config/config.yml
 
+EXPOSE 5000
+
 CMD ["serve", "/config/config.yml"]
 ENTRYPOINT ["/registry"]
